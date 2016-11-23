@@ -14,17 +14,53 @@ nivel_log = logging.ERROR
 #nivel_log = logging.DEBUG
 logger_cagada = None
 
+def crea_monton(numeros):
+	for idx_num,nume in enumerate(numeros):
+		num_ultimo=nume
+		idx_act=idx_num
+		logger_cagada.debug("anadiendo %s en id %u"%(num_ultimo,idx_act))
+		while idx_act:
+			num_act=numeros[idx_act>>1]
+			logger_cagada.debug("num act %u contra num ult %u"%(num_act,num_ultimo))
+			if num_ultimo>num_act:
+				numeros[idx_act]=num_act
+			else:
+				break
+			idx_act=idx_act>>1
+		numeros[idx_act]=num_ultimo
+		logger_cagada.debug("nums asta aora %s"%numeros)
+	logger_cagada.debug("nada orig %s"%(numeros))
+
 
 def monton_sort(numeros):
-	tam_nums=len(numeros)
-	for i in range(tam_nums):
-		arreglo_a_amontonar=numeros[i:]
-		logger_cagada.debug("nada orig %s"%arreglo_a_amontonar)
-#		heapq._heapify_max(arreglo_a_amontonar)
-		heapq.heapify(arreglo_a_amontonar)
-		numeros[i]=arreglo_a_amontonar[0]
-		numeros[i:]=arreglo_a_amontonar
-		logger_cagada.debug("nada %s"%arreglo_a_amontonar)
+	tam_nume=len(numeros)
+	crea_monton(numeros)
+	for idx_num,nume in enumerate(numeros):
+		limite_heap=tam_nume-idx_num-1
+		num_ultimo=numeros[limite_heap]
+		idx_act=0
+		logger_cagada.debug("num u;t %s limite heap %u"%(num_ultimo,limite_heap))
+		numeros[limite_heap]=numeros[0]
+		logger_cagada.debug("ordenado %u en pos %u"%(numeros[0],limite_heap))
+		while ((idx_act<<1)|1)<limite_heap:
+			idx_i=(idx_act<<1)|1
+			idx_d=idx_i+1
+			if(idx_i<limite_heap):
+				idx_maior=idx_i
+			if(idx_d<limite_heap) and numeros[idx_i]<numeros[idx_d]:
+					idx_maior=idx_d
+			num_act=numeros[idx_maior]
+				
+			logger_cagada.debug("num act %u contra num ult %u"%(num_act,num_ultimo))
+			if num_ultimo<num_act:
+				numeros[idx_act]=num_act
+			else:
+				break
+			idx_act=idx_maior
+		logger_cagada.debug("asignando %u a pos %u"%(num_ultimo,idx_act))
+		numeros[idx_act]=num_ultimo
+		logger_cagada.debug("nums asta aora %s"%numeros)
+	logger_cagada.debug("alelu %s"%(numeros))
 
 	logger_cagada.debug("die monster die %s"%numeros)
 	return numeros
