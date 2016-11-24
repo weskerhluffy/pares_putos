@@ -12,16 +12,13 @@ import sys
 
 nivel_log = logging.ERROR
 # nivel_log = logging.DEBUG
-logger_cagada = None
 
 def crea_monton(numeros):
     for idx_num, nume in enumerate(numeros):
         num_ultimo = nume
         idx_act = idx_num
-        logger_cagada.debug("anadiendo %s en id %u" % (num_ultimo, idx_act))
         while idx_act:
             num_act = numeros[(idx_act - 1) >> 1]
-            logger_cagada.debug("num act %u contra num ult %u en %u" % (num_act, num_ultimo, (idx_act - 1) >> 1))
             if num_ultimo > num_act:
                 numeros[idx_act] = num_act
             else:
@@ -29,40 +26,17 @@ def crea_monton(numeros):
             idx_act = (idx_act - 1) >> 1
         assert numeros[idx_act] <= num_ultimo
         numeros[idx_act] = num_ultimo
-        logger_cagada.debug("finalmente %u kedo en %u" % (num_ultimo, idx_act))
-#         logger_cagada.debug("nums asta aora %s"%numeros)
-        for idx_nume in range(idx_num + 1):
-            num_act_tmp = numeros[idx_nume]
-            idx_i = (idx_nume << 1) | 1
-            idx_d = idx_i + 1
-            if(idx_i < idx_num + 1):
-                assert numeros[idx_i] < num_act_tmp
-                if(idx_d < idx_num + 1):
-                    assert numeros[idx_d] < num_act_tmp, "l ijo der %u act %u" % (numeros[idx_d], num_act_tmp)
-    logger_cagada.debug("nada orig %s" % (numeros))
 
 
 def monton_sort(numeros):
     tam_nume = len(numeros)
     crea_monton(numeros)
-    for idx_nume in range(tam_nume):
-        num_act = numeros[idx_nume]
-        idx_i = (idx_nume << 1) | 1
-        idx_d = idx_i + 1
-        if(idx_i < tam_nume):
-            assert numeros[idx_i] < num_act
-            if(idx_d < tam_nume):
-                assert numeros[idx_d] < num_act, "l ijo der %u act %u" % (numeros[idx_d], num_act)
 
-
-    logger_cagada.debug("el tope %u" % numeros[0])
     for idx_num, nume in enumerate(numeros):
         limite_heap = tam_nume - idx_num - 1
         num_ultimo = numeros[limite_heap]
         idx_act = 0
-        logger_cagada.debug("num u;t %s limite heap %u" % (num_ultimo, limite_heap))
         numeros[limite_heap] = numeros[0]
-        logger_cagada.debug("ordenado %u en pos %u" % (numeros[0], limite_heap))
         assert not limite_heap or numeros[limite_heap] >= numeros[limite_heap - 1]
         while ((idx_act << 1) | 1) < limite_heap:
             idx_i = (idx_act << 1) | 1
@@ -73,18 +47,13 @@ def monton_sort(numeros):
                     idx_maior = idx_d
             num_act = numeros[idx_maior]
                 
-            logger_cagada.debug("num act %u contra num ult %u" % (num_act, num_ultimo))
             if num_ultimo < num_act:
                 numeros[idx_act] = num_act
             else:
                 break
             idx_act = idx_maior
-        logger_cagada.debug("asignando %u a pos %u" % (num_ultimo, idx_act))
         numeros[idx_act] = num_ultimo
-        logger_cagada.debug("nums asta aora %s" % numeros)
-    logger_cagada.debug("alelu %s" % (numeros))
 
-    logger_cagada.debug("die monster die %s" % numeros)
     return numeros
 # Head ends here
 def pairs(a, k):
@@ -94,10 +63,7 @@ def pairs(a, k):
     answer = 0
     # a is the list of numbers and k is the difference value
 #    a_ord = sorted(a)
-    logger_cagada.debug("ve must %s" % a)
     a_ord = monton_sort(a)
-    logger_cagada.debug("sven nat  %s" % a_ord)
-    logger_cagada.debug("sven nat1 %s" % sorted(a))
     tam_a = len(a)
     assert len(a) == len(a_ord)
     assert a_ord == sorted(a)
@@ -133,8 +99,6 @@ def pairs(a, k):
 if __name__ == '__main__':
     FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
     logging.basicConfig(level=nivel_log, format=FORMAT)
-    logger_cagada = logging.getLogger("asa")
-    logger_cagada.setLevel(nivel_log)
     
     a = input().strip()
     a = list(map(int, a.split(' ')))
